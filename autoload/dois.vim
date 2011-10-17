@@ -115,7 +115,8 @@ endfunction
 
 function! s:add_task_(task, file)
     let prefix = dois#option#get('task_prefix', '- ')
-    let task = prefix . task
+    let newLine = prefix . a:task
+    let newLine = s:add_tag(newLine, 'new', 1)
     let curr = readfile(a:file)
     let index = len(curr) - 1
     while index >= 0
@@ -127,7 +128,7 @@ function! s:add_task_(task, file)
        endif
        let index -= 1
     endwhile
-    call add(curr, task)
+    call add(curr, newLine)
     call writefile(curr, a:file)
 endfunction
 " }}}
