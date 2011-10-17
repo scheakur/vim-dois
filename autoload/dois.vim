@@ -103,16 +103,30 @@ function! s:add_task(task, file)
         return 0
     endif
     let task = a:task
-    if task == ''
+    if empty(task)
         let task = input('New task: ', '')
     endif
     if empty(task)
         echo 'Please specify a task to add.'
         return 0
     endif
+    call s:add_task_(task, a:file)
+endfunction
+
+function! s:add_task_(task, file)
     let prefix = dois#option#get('task_prefix', '- ')
     let task = prefix . task
     let curr = readfile(a:file)
+    let index = len(curr) - 1
+    while index >= 0
+       let line = curr[index]
+       if line =~ '^\s*$'
+           call remove(curr, index)
+       else
+           break
+       endif
+       let index -= 1
+    endwhile
     call add(curr, task)
     call writefile(curr, a:file)
 endfunction
