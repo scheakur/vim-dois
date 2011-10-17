@@ -47,7 +47,7 @@ function! dois#add_tag(tag, with_timestamp)
 endfunction
 
 function! dois#remove_tag(tag)
-    call s:handle_tag(a:tag, function('s:remove_tag'))
+    call s:handle_tag(a:tag, function('s:remove_tag'), 0)
 endfunction
 
 " script local functions {{{
@@ -171,7 +171,7 @@ endfunction
 
 function! s:toggle_tag(line, tag, with_timestamp)
     if s:has_tag(a:line, a:tag)
-        return s:remove_tag(a:line, a:tag)
+        return s:remove_tag(a:line, a:tag, a:with_timestamp)
     else
         return s:add_tag(a:line, a:tag, a:with_timestamp)
     endif
