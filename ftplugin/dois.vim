@@ -6,7 +6,7 @@ function! s:add_tag(args)
     call dois#add_tag(a:args, 0)
 endfunction
 
-command! -nargs=? -complete=customlist,dois#complete_tag AddTagWithTimestamp call s:add_tag(<q-args>)
+command! -nargs=? -complete=customlist,dois#complete_tag AddTagWithTimestamp call s:add_tag_with_timestamp(<q-args>)
 function! s:add_tag_with_timestamp(args)
     call dois#add_tag(a:args, 1)
 endfunction
