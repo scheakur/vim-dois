@@ -58,7 +58,7 @@ function! s:select_target_file(...)
             return s:modify_filepath(filepath)
         endif
     endfor
-    let file = input('TaskPaper file: ', '')
+    let file = input('TaskPaper file: ', '', 'file')
     return file
 endfunction
 
@@ -147,7 +147,7 @@ endfunction
 function! s:get_tag(tag)
     let tag = a:tag
     if empty(a:tag)
-        let tag = input('Input tag: ', tag)
+        let tag = input('Input tag: ', tag, 'customlist,dois#complete_tag')
     endif
     return tag
 endfunction
@@ -161,6 +161,9 @@ function! s:update_cache(tag)
 endfunction
 
 function! s:add_tag(line, tag, with_timestamp)
+    if s:has_tag(a:line, a:tag)
+        return a:line
+    endif
     call s:update_cache(a:tag)
     if a:with_timestamp
         let dt_format = dois#option#get('dt_format', '%Y-%m-%d,%H:%M')
