@@ -21,5 +21,9 @@ hi def link dois_Done  NonText
 
 setlocal foldmethod=syntax
 
+if dois#option#get('foldopen_init', 1)
+    foldopen
+endif
+
 let b:current_syntax = 'dois'
 
