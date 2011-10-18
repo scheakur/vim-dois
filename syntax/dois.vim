@@ -9,7 +9,8 @@ syn match dois_Comment  /^.*$/
 syn match dois_Project  /^.\+:\s*$/
 syn match dois_Task  /^\s*-\s\+.*$/
 syn match dois_Context  / @[A-Za-z0-9_(\-#,:]\+\()\)\?/ containedin=dois_Task contained
-syn match dois_Done  /.* @done.*$/ containedin=dois_Task contained
+
+syn region dois_Done  start=/.* @done.*$/ end=/\ze\(^\s*-\s\+.*$\)/
 
 syn region dois_ProjectFold start=/^.\+:\s*$/ end=/^\s*$/ keepend transparent fold
 
