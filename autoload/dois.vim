@@ -17,6 +17,21 @@ function! dois#open_daily_file()
     execute 'edit' file
 endfunction
 
+function! dois#open_previous_daily_file()
+    let prev = s:select_previous_daily_file()
+    if (prev != '')
+        execute 'edit' prev
+    else
+        call dois#open_daily_file()
+    endif
+endfunction
+
+function! dois#open_daily_file_from_previous()
+    let file = s:select_daily_file()
+    let prev = s:select_previous_daily_file()
+    "TODO
+endfunction
+
 function! dois#add_task(task)
     let file = s:select_target_file(dois#option#get('file'))
     call s:add_task(a:task, file)
@@ -62,18 +77,44 @@ function! s:select_target_file(...)
     return file
 endfunction
 
-function! s:select_daily_file()
+function! s:select_base_dir()
     if dois#option#has('dir')
-        let base_dir = dois#option#get('dir')
+        return dois#option#get('dir')
     else
-        let base_dir = $HOME . '/tmp/taskpaper'
+        return $HOME . '/tmp/taskpaper'
     endif
+endfunction
+
+function! s:select_daily_dir(date)
+    let base_dir = s:select_base_dir()
     let dir = base_dir . strftime('/%Y/%m')
     if !isdirectory(dir)
         call mkdir(dir, 'p')
     endif
-    let filepath = dir.strftime('/%Y-%m-%d')
+    return dir
+endfunction
+
+function! s:select_daily_file()
+    let today = dois#date#today()
+    let dir = s:select_daily_dir(today)
+    let filepath = dir . today.format('/%Y-%m-%d')
     return s:modify_filepath(filepath)
+endfunction
+
+function! s:select_previous_daily_file(...)
+    let base = get(a:, 1, dois#date#today())
+    let prev = base.prev()
+    let dir = s:select_daily_dir(prev)
+    let filepath = dir . prev.format('/%Y-%m-%d')
+    let file = s:modify_filepath(filepath)
+    if (filereadable(file))
+        return file
+    endif
+    let loop_num = get(a:, 2, 0)
+    if (loop_num > 7)
+        return ''
+    endif
+    return s:select_previous_daily_file(prev, loop_num + 1)
 endfunction
 
 function! s:modify_filepath(filepath)

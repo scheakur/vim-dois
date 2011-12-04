@@ -17,6 +17,18 @@ function! s:dois_daily()
     redraw!
 endfunction
 
+command! -nargs=0 DoisDailyPrevious call s:dois_daily_previous()
+function! s:dois_daily_previous()
+    call dois#open_previous_daily_file()
+    redraw!
+endfunction
+
+command! -nargs=0 DoisDailyFromPrevious call s:dois_daily_from_previous()
+function! s:dois_daily_from_previous()
+    call dois#open_daily_file_from_previous()
+    redraw!
+endfunction
+
 command! -nargs=? DoisAddTask call s:dois_add_task(<q-args>)
 function! s:dois_add_task(args)
     call dois#add_task(a:args)
@@ -29,10 +41,11 @@ function! s:dois_add_daily_task(args)
     redraw!
 endfunction
 
-nnoremap <Plug>(dois:n:dois)  :<C-u>Dois<Return>
+nnoremap <silent> <Plug>(dois:n:dois)  :<C-u>Dois<Return>
 nnoremap <silent> <Plug>(dois:n:dois-daily)  :<C-u>DoisDaily<Return>
-nnoremap <Plug>(dois:n:add-task)  :<C-u>DoisAddTask<Return>
-nnoremap <Plug>(dois:n:add-daily-task)  :<C-u>DoisAddDailyTask<Return>
+nnoremap <silent> <Plug>(dois:n:dois-daily-from-previous)  :<C-u>DoisDailyFromPrevious<Return>
+nnoremap <silent> <Plug>(dois:n:add-task)  :<C-u>DoisAddTask<Return>
+nnoremap <silent> <Plug>(dois:n:add-daily-task)  :<C-u>DoisAddDailyTask<Return>
 
 let g:loaded_dois = 1
 
