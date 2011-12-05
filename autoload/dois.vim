@@ -87,7 +87,7 @@ endfunction
 
 function! s:select_daily_dir(date)
     let base_dir = s:select_base_dir()
-    let dir = base_dir . strftime('/%Y/%m')
+    let dir = base_dir . a:date.format('/%Y/%m')
     if !isdirectory(dir)
         call mkdir(dir, 'p')
     endif
