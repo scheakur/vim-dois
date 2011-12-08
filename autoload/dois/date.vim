@@ -1,51 +1,40 @@
 let s:Date = {
 \   'year': 1970,
 \   'month': 1,
-\   'day': 1,
-\   'epochtime': 0
+\   'day': 1
 \}
+
+function! s:Date.newFromEpochTime(epoch_time)
+    return s:Date.new(
+    \   strftime('%Y', a:epoch_time),
+    \   strftime('%m', a:epoch_time),
+    \   strftime('%d', a:epoch_time))
+endfunction
 
 function! s:Date.new(year, month, day)
     let date = copy(s:Date)
     let date.year = str2nr(a:year)
     let date.month =  str2nr(a:month)
     let date.day =  str2nr(a:day)
-    let date.epochtime = s:epochtime(a:year, a:month, a:day)
     return date
 endfunction
 
 function! s:Date.next()
-    if (s:is_last_day(self))
-        let self.day = 1
-        if (self.month == 12)
-            let self.month = 1
-            let self.year += 1
-        else
-            let self.month += 1
-        endif
-    else
-        let self.day += 1
-    endif
-    return self
+    let next = self.getEpochTime() + s:day_in_seconds
+    return s:Date.newFromEpochTime(next)
 endfunction
 
 function! s:Date.prev()
-    if (s:is_first_day(self))
-        if (self.month == 1)
-            let self.month = 12
-            let self.year -= 1
-        else
-            let self.month -= 1
-        endif
-        let self.day = s:get_last_day(self.year, self.month)
-    else
-        let self.day -= 1
-    endif
-    return self
+    let next = self.getEpochTime() - s:day_in_seconds
+    return s:Date.newFromEpochTime(next)
 endfunction
 
 function! s:Date.format(fmt)
-    return strftime(a:fmt, self.epochtime)
+    return strftime(a:fmt, self.getEpochTime())
+endfunction
+
+function! s:Date.getEpochTime()
+    return s:epochtime(self.year, self.month, self.day)
 endfunction
 
 function! dois#date#today()
