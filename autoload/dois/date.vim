@@ -69,6 +69,9 @@ endfunction
 function! s:epochtime(year, month, day)
     let days_until_last_year = (a:year - 1970) * 365
     \   + s:count_leap_year_btween_1970_and_(a:year)
+    if (a:month <= 2 && s:is_leap_year(a:year))
+        let days_until_last_year -= 1
+    endif
     let days_in_this_year = s:count_days_of_year(a:year, a:month, a:day)
     return (days_until_last_year + days_in_this_year) * s:day_in_seconds
 endfunction
